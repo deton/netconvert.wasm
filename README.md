@@ -3,41 +3,41 @@
 https://deton.github.io/netconvert.wasm/index.html
 
 ## Build
-* Prepare
+### Prepare
 ```sh
 export SUMO_HOME=/work/sumo/sumo
 source "/work/sumo/emsdk/emsdk_env.sh"
 ```
 
-* xerces-c
+### xerces-c
 ```sh
 emconfigure ./configure --disable-threads --disable-shared --disable-network --prefix=/work/sumo/emenv
 emmake make >& make.log
 emmake make install
 ```
 
-* zlib
+### zlib
 ```sh
 emconfigure ./configure --static --prefix=/work/sumo/emenv
 emmake make >& make.log
 emmake make install
 ```
 
-* sqlite3 (projが依存)
+### sqlite3 (projが依存)
 ```sh
 emconfigure ./configure --disable-readline --disable-threadsafe --disable-dynamic-extensions --disable-shared --prefix=/work/sumo/emenv
 emmake make >& make.log
 emmake make install
 ```
 
-* proj
+### proj
 ```sh
 emcmake cmake -DENABLE_TIFF=OFF -DENABLE_CURL=OFF -DSQLITE3_INCLUDE_DIR=/work/sumo/emenv/include -DSQLITE3_LIBRARY=/work/sumo/emenv/lib/libsqlite3.a -DCMAKE_THREAD_LIBS_INIT=OFF -DBUILD_APPS=OFF -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX=/work/sumo/emenv ..
 emmake make >& make.log
 emmake make install
 ```
 
-* sumo
+### sumo
 python-devがrequiredになってるけど、とりあえずCMakeLists.txtから外す。
 ```diff
 -    find_package(Python REQUIRED COMPONENTS Interpreter Development)
