@@ -53,7 +53,7 @@ cd build
 emcmake cmake -DENABLE_TIFF=OFF -DENABLE_CURL=OFF -DSQLITE3_INCLUDE_DIR=/work/sumo/emenv/include -DSQLITE3_LIBRARY=/work/sumo/emenv/lib/libsqlite3.a -DCMAKE_THREAD_LIBS_INIT=OFF -DBUILD_APPS=OFF -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX=/work/sumo/emenv ..
 emmake make >& make.log
 emmake make install
-cd ..
+cd ../..
 ```
 
 ### SUMO netconvert
