@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <title>SUMO netconvert Wasm</title>
+    <style>
+      .emscripten { padding-right: 0; margin-left: auto; margin-right: auto; display: block; }
+      textarea.emscripten { font-family: monospace; width: 80%; }
+    </style>
+  </head>
+  <body>
+    <h1>SUMO netconvert Wasm</h1>
+    <h2>Settings</h2>
+    <form>
+      <fieldset>
+        <legend>Set option</legend>
+        <label><input type="checkbox" name="lefthand" />lefthand</label>
+      </fieldset>
+      <fieldset>
+        <legend>Choose an input file (.osm XML files)</legend>
+        <input type="file" />
+      </fieldset>
+    </form>
+    <h2>netconvert command</h2>
+    <pre></pre>
+    <h2>Output</h2>
+    <textarea class="emscripten" id="output" rows="8"></textarea>
+    <script src="script.js" type="module"></script>
+  </body>
+</html>
