@@ -11,7 +11,7 @@ worker.onmessage = ev => {
     return;
   }
   print('Downloading...');
-  const file = new File([ev.data], 'output.net.xml');
+  const file = new File([ev.data], 'output.net.xml.gz');
   const a = document.createElement('a');
   a.href = URL.createObjectURL(file);
   a.download = file.name;

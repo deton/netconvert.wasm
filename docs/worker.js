@@ -25,7 +25,14 @@ onmessage = async function (ev) {
     Module.callMain(options);
 
     const output = Module.FS.readFile(outputFile, { encoding: 'binary' });
-    postMessage(output.buffer, [output.buffer]);
+    // gzip output
+    const readableStream = new Blob([output]).stream();
+    const compressedReadableStream = readableStream.pipeThrough(
+      new CompressionStream('gzip')
+    );
+    const compressedResponse = await new Response(compressedReadableStream);
+    const buf = await compressedResponse.arrayBuffer();
+    postMessage(buf, [buf]);
   } catch (err) {
     console.error(err);
     print(err.message);
