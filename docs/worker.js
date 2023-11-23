@@ -5,29 +5,20 @@ const Module = await loadWASM({
 });
 
 onmessage = async function (ev) {
-  let [options, file] = ev.data;
+  const [options, file, outputFileName] = ev.data;
 
   if (!Module.FS.analyzePath('/work').exists) {
     Module.FS.mkdir('/work');
   }
   Module.FS.mount(Module.FS.filesystems.WORKERFS, { files: [file] }, '/work');
 
-  const inputFile = `/work/${file.name}`;
-  const outputFile = 'output.net.xml';
-  options = [
-    ...options,
-    '--osm', inputFile,
-    '-o', outputFile,
-  ];
-
-  if (Module.FS.analyzePath(outputFile).exists) {
-    Module.FS.unlink(outputFile);
+  if (Module.FS.analyzePath(outputFileName).exists) {
+    Module.FS.unlink(outputFileName);
   }
   try {
     Module.callMain(options);
-    Module.FS.unmount('/work');
 
-    const output = Module.FS.readFile(outputFile, { encoding: 'binary' });
+    const output = Module.FS.readFile(outputFileName, { encoding: 'binary' });
     // gzip output
     const readableStream = new Blob([output]).stream();
     const compressedReadableStream = readableStream.pipeThrough(
@@ -39,6 +30,8 @@ onmessage = async function (ev) {
   } catch (err) {
     console.error(err);
     print(err.message);
+  } finally {
+    Module.FS.unmount('/work');
   }
 };
 
