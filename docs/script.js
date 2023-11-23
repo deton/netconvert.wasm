@@ -50,6 +50,7 @@ fileInput.addEventListener('change', async () => {
     options.push('--lefthand');
   }
   pre.textContent = `netconvert ${options.join(' ')}`;
+  outputTextarea.value = '';
   worker.postMessage([options, file]);
   fileInput.value = '';
 });

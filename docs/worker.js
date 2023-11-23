@@ -7,7 +7,9 @@ const Module = await loadWASM({
 onmessage = async function (ev) {
   let [options, file] = ev.data;
 
-  Module.FS.mkdir('/work');
+  if (!Module.FS.analyzePath('/work').exists) {
+    Module.FS.mkdir('/work');
+  }
   Module.FS.mount(Module.FS.filesystems.WORKERFS, { files: [file] }, '/work');
 
   const inputFile = `/work/${file.name}`;
@@ -23,6 +25,7 @@ onmessage = async function (ev) {
   }
   try {
     Module.callMain(options);
+    Module.FS.unmount('/work');
 
     const output = Module.FS.readFile(outputFile, { encoding: 'binary' });
     // gzip output
