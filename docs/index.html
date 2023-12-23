@@ -6,6 +6,7 @@
     <style>
       .emscripten { padding-right: 0; margin-left: auto; margin-right: auto; display: block; }
       textarea.emscripten { font-family: monospace; width: 100%; }
+      input[name=options] { font-family: monospace; width: 100%; }
     </style>
   </head>
   <body>
@@ -13,8 +14,9 @@
     <h2>Settings</h2>
     <form>
       <fieldset>
-        <legend>Set option</legend>
-        <label><input type="checkbox" name="lefthand" />lefthand</label>
+        <legend>Set options</legend>
+        <input type="text" name="options" value="--geometry.remove --ramps.guess --junctions.join --tls.guess-signals --tls.discard-simple --tls.join --tls.default-type actuated --lefthand" />
+        <!-- https://sumo.dlr.de/docs/Networks/Import/OpenStreetMap.html#recommended_netconvert_options -->
       </fieldset>
       <fieldset>
         <legend>Choose an input file (.osm XML files)</legend>

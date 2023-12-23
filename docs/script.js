@@ -10,7 +10,7 @@ worker.onmessage = ev => {
     print(ev.data);
     return;
   }
-  print('Downloading...');
+  print('Downloading output.net.xml.gz ...');
   const file = new File([ev.data], 'output.net.xml.gz');
   const a = document.createElement('a');
   a.href = URL.createObjectURL(file);
@@ -20,7 +20,7 @@ worker.onmessage = ev => {
 };
 
 const fileInput = document.querySelector('[type=file]');
-const lefthandCheckbox = document.querySelector('[name=lefthand]');
+const optionsInput = document.querySelector('[name=options]');
 const pre = document.querySelector('pre');
 const outputTextarea = document.getElementById('output');
 outputTextarea.value = ''; // clear browser cache
@@ -44,15 +44,8 @@ fileInput.addEventListener('change', async () => {
   const options = [
     '--osm', inputFileName,
     '-o', outputFileName,
-    // recommended options
-    // https://sumo.dlr.de/docs/Networks/Import/OpenStreetMap.html#recommended_netconvert_options
-    '--geometry.remove', '--ramps.guess', '--junctions.join',
-    '--tls.guess-signals', '--tls.discard-simple', '--tls.join',
-    '--tls.default-type', 'actuated',
+    ...optionsInput.value.split(' ')
   ];
-  if (lefthandCheckbox.checked) {
-    options.push('--lefthand');
-  }
   pre.textContent = `netconvert ${options.join(' ')}`;
   outputTextarea.value = '';
   worker.postMessage([options, file, outputFileName]);
