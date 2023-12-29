@@ -44,6 +44,7 @@ fileInput.addEventListener('change', async () => {
   const options = [
     '--osm', inputFileName,
     '-o', outputFileName,
+    '--xml-validation', 'never', // suppress warning bacause of no data/xsd/*
     ...optionsInput.value.split(' ')
   ];
   pre.textContent = `netconvert ${options.join(' ')}`;
