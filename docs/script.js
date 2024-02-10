@@ -10,6 +10,7 @@ worker.onmessage = ev => {
     print(ev.data);
     return;
   }
+  console.timeEnd('netconvert');
   print('Downloading output.net.xml.gz ...');
   const file = new File([ev.data], 'output.net.xml.gz');
   const a = document.createElement('a');
@@ -32,7 +33,7 @@ function print(text) {
   //text = text.replace(/</g, "&lt;");
   //text = text.replace(/>/g, "&gt;");
   //text = text.replace('\n', '<br>', 'g');
-  console.log(text);
+  //console.log(text);
   outputTextarea.value += text + "\n";
   outputTextarea.scrollTop = outputTextarea.scrollHeight; // focus on bottom
 }
@@ -40,7 +41,7 @@ function print(text) {
 fileInput.addEventListener('change', async () => {
   const file = fileInput.files[0];
   const inputFileName = `/work/${file.name}`;
-  const outputFileName = 'output.net.xml';
+  const outputFileName = 'output.net.xml.gz';
   const options = [
     '--osm', inputFileName,
     '-o', outputFileName,
@@ -49,6 +50,7 @@ fileInput.addEventListener('change', async () => {
   ];
   pre.textContent = `netconvert ${options.join(' ')}`;
   outputTextarea.value = '';
+  console.time('netconvert');
   worker.postMessage([options, file, outputFileName]);
   fileInput.value = '';
 });
