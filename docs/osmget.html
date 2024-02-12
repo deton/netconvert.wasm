@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Download OSM data using Overpass API</title>
+  <script src="https://unpkg.com/maplibre-gl/dist/maplibre-gl.js"></script>
+  <link href="https://unpkg.com/maplibre-gl/dist/maplibre-gl.css" rel="stylesheet" />
+  <style>
+    body { margin: 0; padding: 0; }
+    html, body, #map { height: 100%; }
+    #fetchButton { position: absolute; top: 0; left: 0; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <button id="fetchButton">Download OSM data using Overpass API</button>
+  <script>
+    const map = new maplibregl.Map({
+      container: 'map',
+      style: 'https://tile.openstreetmap.jp/styles/osm-bright/style.json',
+      center: [139.7660, 35.6812],
+      zoom: 16,
+      hash: true,
+    });
+    map.addControl(new maplibregl.NavigationControl({
+      showCompass: false,
+    }));
+
+    const fetchButton = document.getElementById('fetchButton');
+    fetchButton.addEventListener('click', () => {
+      fetchButton.disabled = true;
+      const bounds = map.getBounds();
+      console.log('bbox', bounds);
+      // cf. SUMO tools/osmGet.py
+      const q = `<osm-script timeout="240" element-limit="1073741824">
+          <union>
+           <bbox-query n="${bounds.getNorth()}" s="${bounds.getSouth()}" w="${bounds.getWest()}" e="${bounds.getEast()}"/>
+           <recurse type="node-relation" into="rels"/>
+           <recurse type="node-way"/>
+           <recurse type="way-relation"/>
+          </union>
+          <union>
+            <item/>
+            <recurse type="way-node"/>
+          </union>
+        <print mode="body"/>
+        </osm-script>`;
+      //console.log('Overpass query:', q);
+      fetch('https://www.overpass-api.de/api/interpreter', {
+        method: 'POST',
+        body: q,
+      }).then(resp => {
+        //console.log('response:', resp);
+        if (resp.status === 200) {
+          return resp.blob();
+        } else {
+          console.error(resp);
+          return Promise.reject(`Response status: ${resp.status}`);
+        }
+      }).then(blob => {
+        // gzip output
+        return new Response(blob.stream().pipeThrough(
+          new CompressionStream('gzip')
+        ));
+      }).then(compressed => {
+        return compressed.arrayBuffer();
+      }).then(buf => {
+        const file = new File([buf], 'map.osm.xml.gz');
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(file);
+        a.download = file.name;
+        a.click();
+        URL.revokeObjectURL(a.href);
+      }).catch((err) => {
+        console.error(err);
+        alert(JSON.stringify(err));
+      }).finally(() => {
+        fetchButton.disabled = false;
+      });
+    });
+  </script>
+</body>
+</html>
