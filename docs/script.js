@@ -49,7 +49,7 @@ fileInput.addEventListener('change', async () => {
     ...optionsInput.value.split(' ')
   ];
   pre.textContent = `netconvert ${options.join(' ')}`;
-  outputTextarea.value = '';
+  outputTextarea.value = `netconvert ${options.join(' ')}\n`;
   console.time('netconvert');
   worker.postMessage([options, file, outputFileName]);
   fileInput.value = '';
