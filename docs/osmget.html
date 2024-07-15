@@ -39,7 +39,11 @@
     var areaSelect = L.areaSelect().addTo(map);
     areaSelect.setBounds(L.latLngBounds([[bbox[1], bbox[0]], [bbox[3], bbox[2]]]));
 
-    L.Control.geocoder().addTo(map);
+    L.Control.geocoder({
+      defaultMarkGeocode: false
+    }).on('markgeocode', ev => {
+      map.panTo(ev.geocode.center);
+    }).addTo(map);
 
     const fetchButton = document.getElementById('fetchButton');
     const anchorElem = document.getElementById("anchor");
