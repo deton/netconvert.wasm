@@ -7,11 +7,13 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
         crossorigin=""/>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jonatanheyman/leaflet-areaselect@1.2.0/src/leaflet-areaselect.css"/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
         crossorigin=""></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jonatanheyman/leaflet-areaselect@1.2.0/src/leaflet-areaselect.css"/>
   <script src="https://cdn.jsdelivr.net/npm/@jonatanheyman/leaflet-areaselect@1.2.0/src/leaflet-areaselect.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+  <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
   <style>
     body { margin: 0; padding: 0; }
     html, body, #map { width: 100%; height: 100vh; }
@@ -36,6 +38,8 @@
 
     var areaSelect = L.areaSelect().addTo(map);
     areaSelect.setBounds(L.latLngBounds([[bbox[1], bbox[0]], [bbox[3], bbox[2]]]));
+
+    L.Control.geocoder().addTo(map);
 
     const fetchButton = document.getElementById('fetchButton');
     const anchorElem = document.getElementById("anchor");
