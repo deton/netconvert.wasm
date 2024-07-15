@@ -1,12 +1,13 @@
 import loadWASM from './netconvert.js';
-const Module = await loadWASM({
-  print,
-  printErr: print,
-});
 
 onmessage = async function (ev) {
   const [options, file, outputFileName] = ev.data;
 
+  // create new instance each time to use fresh static/global variables
+  const Module = await loadWASM({
+    print,
+    printErr: print,
+  });
   if (!Module.FS.analyzePath('/work').exists) {
     Module.FS.mkdir('/work');
   }

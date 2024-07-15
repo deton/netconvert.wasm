@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <title>Osmconvert Wasm</title>
+    <style>
+      .emscripten { padding-right: 0; margin-left: auto; margin-right: auto; display: block; }
+      textarea.emscripten { font-family: monospace; width: 100%; }
+      input { font-family: monospace; width: 100%; }
+    </style>
+  </head>
+  <body>
+    <h1>Osmconvert Wasm</h1>
+    <a href="../osmget.html">Create input file</a>
+    <h2>Settings</h2>
+    <form>
+      <fieldset>
+        <legend>Output file name</legend>
+        <input type="text" name="outfname" value="output.pbf" />
+      </fieldset>
+      <fieldset>
+        <legend>Options</legend>
+        <input type="text" name="options" value="-v --statistics" />
+      </fieldset>
+      <fieldset>
+        <legend>Choose input files</legend>
+        <input type="file" accept=".osm,.osc,.gz,.osh,.o5m,.o5c,.pbf" multiple />
+      </fieldset>
+    </form>
+    <h2>osmconvert command</h2>
+    <pre></pre>
+    <h2>Output</h2>
+    <textarea class="emscripten" id="output" rows="20"></textarea>
+    <script src="script.js" type="module"></script>
+  </body>
+</html>

@@ -1,8 +1,10 @@
-# SUMO netconvert WebAssembly
-## Demo
-https://deton.github.io/netconvert.wasm/index.html
+# SUMO netconvert WebAssembly (and osmconvert)
 
-## Build
+## Demo
+* [netconvert.wasm](https://deton.github.io/netconvert.wasm/index.html)
+* [osmconvert.wasm](https://deton.github.io/netconvert.wasm/osmconvert/index.html)
+
+## Build netconvert.wasm
 ### Prepare
 ```sh
 export WORK=/work/sumo
@@ -96,6 +98,11 @@ CXXFLAGS='-sNO_DISABLE_EXCEPTION_CATCHING' emcmake cmake -D CHECK_OPTIONAL_LIBS=
 
 cd build
 emmake make netconvert>&make.log
+```
+
+## Build osmconvert.wasm
+```sh
+emcc osmconvert.c -o osmconvert.js -Oz -sUSE_ZLIB=1 -sFILESYSTEM=1 -sEXPORTED_RUNTIME_METHODS=FS,callMain -sMODULARIZE=1 -sEXPORT_ES6 -sINVOKE_RUN=0 -sENVIRONMENT=web,worker -sALLOW_MEMORY_GROWTH=1 -lworkerfs.js -sSTACK_SIZE=131072 -sSTACK_OVERFLOW_CHECK=2
 ```
 
 ## 参考
