@@ -1,0 +1,44 @@
+<html>
+<head>
+  <title>gzip on browser</title>
+</head>
+<body>
+<input type="file" id="fileElem" multiple />
+
+<script>
+const fileElem = document.getElementById("fileElem");
+
+fileElem.addEventListener("change", handleFiles, false);
+
+function handleFiles() {
+  for (let i = 0; i < this.files.length; i++) {
+    const file = this.files[i];
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const buf = e.target.result; // ArrayBuffer
+      const readableStream = new Blob([buf]).stream();
+      const compressedReadableStream = readableStream.pipeThrough(
+        new CompressionStream("gzip")
+      );
+      (async () => {
+        // https://dev.to/samternent/json-compression-in-the-browser-with-gzip-and-the-compression-streams-api-4135
+        const compressedResponse = await new Response(compressedReadableStream);
+        const blob = await compressedResponse.blob();
+
+        // Create a programmatic download link
+        const elem = document.createElement("a");
+        elem.href = URL.createObjectURL(blob);
+        elem.download = file.name + '.gz';
+        document.body.appendChild(elem);
+        elem.click();
+        URL.revokeObjectURL(elem.href);
+        document.body.removeChild(elem);
+      })();
+    };
+    reader.readAsArrayBuffer(file);
+  }
+  fileElem.value = '';
+}
+</script>
+</body>
+</html>
