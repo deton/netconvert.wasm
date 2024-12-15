@@ -10,8 +10,8 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
         crossorigin=""></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jonatanheyman/leaflet-areaselect@1.2.0/src/leaflet-areaselect.css"/>
-  <script src="https://cdn.jsdelivr.net/npm/@jonatanheyman/leaflet-areaselect@1.2.0/src/leaflet-areaselect.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/deton/leaflet-locationfilter@master/src/locationfilter.css" />
+  <script src="https://cdn.jsdelivr.net/gh/deton/leaflet-locationfilter@master/src/locationfilter.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
   <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
   <style>
@@ -35,9 +35,18 @@
     // bbox=<westLng>,<southLat>,<eastLng>,<northLat>
     let bboxParam = urlParams.get('bbox') || '139.75776,35.67771,139.77424,35.68469';
     let bbox = bboxParam.split(',').map(Number);
+    const bounds = L.latLngBounds([[bbox[1], bbox[0]], [bbox[3], bbox[2]]])
+    map.fitBounds(bounds);
 
-    var areaSelect = L.areaSelect().addTo(map);
-    areaSelect.setBounds(L.latLngBounds([[bbox[1], bbox[0]], [bbox[3], bbox[2]]]));
+    var locationFilter = new L.LocationFilter({
+      enable: true,
+      showButtons: false,
+      locked: false,
+      fixed: false,
+      //repositionResizeMarkers: false,
+      bounds: bounds,
+    }).addTo(map);
+    //locationFilter.setBounds(L.latLngBounds([[bbox[1], bbox[0]], [bbox[3], bbox[2]]]));
 
     L.Control.geocoder({
       defaultMarkGeocode: false
@@ -49,7 +58,7 @@
     const anchorElem = document.getElementById("anchor");
     fetchButton.addEventListener('click', () => {
       fetchButton.disabled = true;
-      const bounds = areaSelect.getBounds();
+      const bounds = locationFilter.getBounds();
       console.log(`bbox=${bounds.toBBoxString()}`);
       // cf. SUMO tools/osmGet.py
       const q = `<osm-script timeout="240" element-limit="1073741824">
