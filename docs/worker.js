@@ -37,6 +37,7 @@ onmessage = async function (ev) {
     print(err.message);
   } finally {
     Module.FS.unmount('/work');
+    //self.close();
   }
 };
 
